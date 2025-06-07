@@ -16,7 +16,7 @@ interface TowState {
   carX: number // pozycja X rozbitego auta
 }
 
-function Car({ z, color, lights, driftState, offroad, visible = true, collisionZ }: { z: number, color: string, lights: 'front' | 'rear', driftState?: DriftState, offroad?: boolean, visible?: boolean, collisionZ?: number }) {
+function Car({ x, z, color, lights, driftState, offroad, visible = true, collisionZ }: { x: number, z: number, color: string, lights: 'front' | 'rear', driftState?: DriftState, offroad?: boolean, visible?: boolean, collisionZ?: number }) {
   // Animacja poślizgu: przesuwanie w bok, obrót
   let driftX = 0
   let driftRot = 0
@@ -24,14 +24,14 @@ function Car({ z, color, lights, driftState, offroad, visible = true, collisionZ
   if (driftState?.drifting || offroad) {
     if (driftState?.drifting) {
       const t = Math.min(driftState.t, 1.5)
-      driftX = -1.2 * (t / 1.5)
-      driftRot = -1.5 * 2 * Math.PI * (t / 1.5)
+      driftX = (x < 0 ? -1.2 : 1.2) * (t / 1.5)
+      driftRot = (x < 0 ? -1 : 1) * 1.5 * 2 * Math.PI * (t / 1.5)
     } else if (offroad) {
-      driftX = -1.2
-      driftRot = -1.5 * 2 * Math.PI
+      driftX = (x < 0 ? -1.2 : 1.2)
+      driftRot = (x < 0 ? -1 : 1) * 1.5 * 2 * Math.PI
     }
     return (
-      <group position={[driftX, 0.05, collisionZ !== undefined ? collisionZ : z]} rotation={[0, driftRot, 0]}>
+      <group position={[x + driftX, 0.05, collisionZ !== undefined ? collisionZ : z]} rotation={[0, driftRot, 0]}>
         {/* Korpus samochodu */}
         <mesh>
           <boxGeometry args={[0.18, 0.06, 0.32]} />
@@ -67,7 +67,7 @@ function Car({ z, color, lights, driftState, offroad, visible = true, collisionZ
     )
   }
   return (
-    <group position={[0, 0.05, collisionZ !== undefined ? collisionZ : z]} rotation={[0, 0, 0]}>
+    <group position={[x, 0.05, collisionZ !== undefined ? collisionZ : z]} rotation={[0, 0, 0]}>
       {/* Korpus samochodu */}
       <mesh>
         <boxGeometry args={[0.18, 0.06, 0.32]} />
@@ -323,12 +323,12 @@ function Road() {
       {/* Samochody */}
       <group ref={carsRef}>
         {/* Jadące do przodu (lewy pas, białe światła z przodu) */}
-        <Car z={offroad[0] ? offroadZ[0] : -10} color="#888" lights="front" driftState={drifted[0]} offroad={offroad[0]} visible={carVisible[0]} collisionZ={collisionZ[0]} />
-        <Car z={offroad[1] ? offroadZ[1] : -13} color="#bbb" lights="front" driftState={drifted[1]} offroad={offroad[1]} visible={carVisible[1]} collisionZ={collisionZ[1]} />
-        <Car z={offroad[2] ? offroadZ[2] : -16} color="#666" lights="front" driftState={drifted[2]} offroad={offroad[2]} visible={carVisible[2]} collisionZ={collisionZ[2]} />
+        <Car x={-0.4} z={offroad[0] ? offroadZ[0] : -10} color="#888" lights="front" driftState={drifted[0]} offroad={offroad[0]} visible={carVisible[0]} collisionZ={collisionZ[0]} />
+        <Car x={-0.5} z={offroad[1] ? offroadZ[1] : -13} color="#bbb" lights="front" driftState={drifted[1]} offroad={offroad[1]} visible={carVisible[1]} collisionZ={collisionZ[1]} />
+        <Car x={-0.3} z={offroad[2] ? offroadZ[2] : -16} color="#666" lights="front" driftState={drifted[2]} offroad={offroad[2]} visible={carVisible[2]} collisionZ={collisionZ[2]} />
         {/* Jadące do tyłu (prawy pas, czerwone światła z przodu) */}
-        <Car z={10} color="#888" lights="rear" />
-        <Car z={13} color="#bbb" lights="rear" />
+        <Car x={0.4} z={10} color="#888" lights="rear" />
+        <Car x={0.5} z={13} color="#bbb" lights="rear" />
       </group>
       {/* Laweta */}
       {tow && (
