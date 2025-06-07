@@ -250,8 +250,9 @@ export default function Home() {
               className="mb-12 space-y-4"
             >
               <a
-                href="/application-74969579-868e-4d22-869b-4fd0e7a54b42.apk"
-                download="Caramigo.apk"
+                href="https://expo.dev/artifacts/eas/fp1SrtwNz2LAqZPW5GuRL7.apk"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block w-full px-6 py-3 bg-[#3DDC84] hover:bg-[#2BB673] rounded-lg font-semibold transition-colors text-black flex items-center justify-center gap-2"
               >
                 <FaAndroid className="text-xl" />
